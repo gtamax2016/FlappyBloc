@@ -1,0 +1,3 @@
+/home/maxps/codes/casio/FlappyBloc/build-fx/CMakeFiles/flappybloc.dir
+/home/maxps/codes/casio/FlappyBloc/build-fx/CMakeFiles/edit_cache.dir
+/home/maxps/codes/casio/FlappyBloc/build-fx/CMakeFiles/rebuild_cache.dir
