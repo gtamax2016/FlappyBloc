@@ -36,6 +36,8 @@ int main() {
 	uint8_t key;
 	float falling_timer = 0;
 	uint32_t score = 0;
+	float speed_multiplyer = 1;
+	bool add_score = false;
 
 	//initialize player	
 	struct Player player;
@@ -56,20 +58,20 @@ int main() {
 		timer += 1;
 		
 		//column mouvement
-		if ((first_col.x_pos -= 0.02) <= 1) {
+		if ((first_col.x_pos -= 0.02 * (speed_multiplyer - 0.05)) <= 1) {
 			first_col.x_pos = SCREEN_WIDTH - 10;
-			first_col.select = timer % 4;
+			first_col.select = (timer + score) % 4;
 		}
-		if ((second_col.x_pos -= 0.02) <= 1) {
+		if ((second_col.x_pos -= 0.02 * (speed_multiplyer - 0.05)) <= 1) {
 			second_col.x_pos = SCREEN_WIDTH - 10;
-			second_col.select = (timer + 3) % 4;
+			second_col.select = (timer + score + 3) % 4;
 		}
 
 		//player movement
 		if (key == KEY_EXE && player.is_falling == true) player.is_falling = false;
 
 		if (player.is_falling == true) {
-			player.y_pos += 0.015;
+			player.y_pos += 0.015 * speed_multiplyer;
 		}
 		else {
 			player.y_pos -= 0.02;
@@ -79,12 +81,16 @@ int main() {
 		if (falling_timer >= 1) {
 			player.is_falling = true;
 			falling_timer = 0;
-		}
-		
+		}	
+
 		//add score
-		if (player.x_pos == (uint8_t) first_col.x_pos + 5) score += 1;
-		if (player.x_pos == (uint8_t) second_col.x_pos + 5) score += 1;
-		 
+		if ((player.x_pos == (uint8_t) first_col.x_pos + 5 && add_score == false) || (player.x_pos == (uint8_t) second_col.x_pos + 5 && add_score == false)) {
+			add_score = true;
+			score += 1;
+			if (score > 0 && score % 3 == 0) speed_multiplyer += 0.11;
+		}
+		else if ((player.x_pos == (uint8_t) first_col.x_pos + 6 && add_score == true) || (player.x_pos == (uint8_t) second_col.x_pos + 6 && add_score == true)) add_score = false;
+
 		//create player_rect
 		player.rect = new_rect(
 			new_point(player.x_pos, player.y_pos),
